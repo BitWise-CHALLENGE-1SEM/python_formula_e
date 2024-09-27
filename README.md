@@ -5,6 +5,7 @@
 	2. Enrico Ricarte Rodrigues - RM: 558571
 	3. Victor Freire Martins Siqueira - RM: 556191
 	4. Matheus Gushi Morioka - RM: 556935
+	5. Pedro Gaspar Fernandes Ferrari - RM: 554887
 	
 # Formula-E Race Assistant
 

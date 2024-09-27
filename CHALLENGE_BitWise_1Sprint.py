@@ -1,13 +1,17 @@
-# Função que exibe o menu principal do programa.
-def menu():
+def menu() -> None:
+    """
+    Exibe o menu principal com as opções disponíveis no programa.
+    """
     print("\n1 - Exibir lista das pistas")
     print("2 - Estimar uso de bateria durante a corrida")
     print("3 - Estimar a eficiencia da bateria com base na temperatura")
     print("4 - Calcular a distancia TOTAL da corrida")
     print("0 - Encerrar o programa")
 
-# Função que exibe as pistas disponíveis e seus respectivos tamanhos por volta.
-def exibir_pistas():
+def exibir_pistas() -> None:
+    """
+    Exibe a lista de pistas disponíveis com seus respectivos tamanhos em quilômetros.
+    """
     print("\nPISTA -> TAMANHO POR VOLTA\n")
     for chave,valor in pistas.items():
         print(f"{chave}: \t{valor} Km")
@@ -37,9 +41,11 @@ pistas = {
 #recuperação da bateria nas frenagens = até 600kW
 #Conta consumo ideal medio final seria: watt(usados) - watt(recuperados(até 600 por frenagem)) * hora total do circuito / 1.000 --> TEM QUE DAR ATE 47 Kwh
 
-#Função para estimar o uso de bateria durante a corrida com base na potência usada e energia recuperada nas frenagens.
-def uso_bateria():
-    # Código para coletar dados do usuário e calcular o consumo de bateria.
+def uso_bateria() -> str:
+    """
+    Calcula o consumo de bateria durante a corrida com base na potência usada e energia recuperada nas frenagens.
+    Retorna uma mensagem informando se o consumo foi maior ou menor que o limite de 47 kWh.
+    """
 
     potencia = 0
     voltas = int(input("Digite a quantidade de voltas: "))
@@ -67,8 +73,11 @@ def uso_bateria():
 #temperatura ideal da bateria = 20 a 25 graus (C)
 #A margem que se distancia desse range a eficiencia diminui
 
-#Função para estimar a eficiência da bateria com base na temperatura atual.
-def eficiencia_bateria(temperatura):
+def eficiencia_bateria(temperatura: float) -> str:
+    """
+    Calcula a eficiência da bateria com base na temperatura fornecida.
+    Retorna a eficiência percentual da bateria.
+    """
     eficiencia = 100
     if temperatura > 25:
         nova_eficiencia = eficiencia - (temperatura - 25)
@@ -83,8 +92,11 @@ def eficiencia_bateria(temperatura):
     return resposta
 
 
-#Função para calcular a distância total da corrida com base na pista escolhida e no número de voltas.
-def distancia_corrida(pista,voltas):
+def distancia_corrida(pista: str,voltas: int) -> str:
+    """
+    Calcula a distância total da corrida com base na pista escolhida e no número de voltas.
+    Retorna a distância total em quilômetros.
+    """
     volta = pistas.get(pista)
     distancia = volta * voltas
     resposta = f"A distancia total da corrida (Race Lenght) é de {distancia}, percorrendo {voltas} voltas."
