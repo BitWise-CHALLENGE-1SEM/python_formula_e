@@ -1,7 +1,7 @@
 {
     "bateria": {
-        "usagem": "142.50 Kwh",
-        "relacao": "95.50 Kwh",
-        "status": "ultrapassando"
+        "usagem": "-90.00 Kwh",
+        "relacao": "137.00 Kwh",
+        "status": "economizando"
     }
 }
