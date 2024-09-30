@@ -1,3 +1,12 @@
+import json
+
+def salvar_json(dados, nome_arquivo="informacoes.json"):
+    """
+    Salva os dados fornecidos em um arquivo JSON.
+    """
+    with open(nome_arquivo, 'w') as arquivo:
+        json.dump(dados, arquivo, indent=4)
+
 def menu() -> None:
     """
     Exibe o menu principal com as opções disponíveis no programa.
@@ -46,27 +55,49 @@ def uso_bateria() -> str:
     Calcula o consumo de bateria durante a corrida com base na potência usada e energia recuperada nas frenagens.
     Retorna uma mensagem informando se o consumo foi maior ou menor que o limite de 47 kWh.
     """
-
-    potencia = 0
+    potencia_total = 0
     voltas = int(input("Digite a quantidade de voltas: "))
     tempo = float(input("Digite o tempo em horas da corrida: "))
+    
+    # Coletando potência usada nos momentos da corrida
     for x in range(3):
-        potencia += float(input(f"Digite a potencia em KiloWatt(kW) usada no momento {x+1} da corrida (350 max): "))
-    frenagens = int(input("Digite a quantidade de frenagens por volta: "))
-    recuperacao = 0
-    for y in range(frenagens):
-        recuperacao += float(input(f"Digite a energia recuperada na frenagem {y+1} em KiloWatt(kW) (600 max): "))
+        potencia = float(input(f"Digite a potencia em KiloWatt(kW) usada no momento {x+1} da corrida (350 max): "))
+        potencia_total += potencia
+        
+    # Cálculo da potência média
+    potencia_media = potencia_total / 3  # A média da potência usada
 
-    #cálculos 
-    potencia_media = (potencia*1000)/3 #transformando Kw -> W
-    recuperacao_media = ((recuperacao*1000) / 3) * voltas
-    resultado = ((potencia_media - recuperacao_media) * tempo) / 1000
-    meta = 47 #Kwh
+    # Coletando dados sobre frenagens
+    frenagens = int(input("Digite a quantidade de frenagens por volta: "))
+    energia_recuperada_total = 0
+
+    for y in range(frenagens):
+        recuperacao = float(input(f"Digite a energia recuperada na frenagem {y+1} em KiloWatt(kW) (600 max): "))
+        energia_recuperada_total += recuperacao  # Soma a energia recuperada em cada frenagem
+
+    # Cálculos
+    energia_usada = potencia_media * tempo  # Total de energia usada em kWh
+    energia_recuperada_kWh = (energia_recuperada_total / frenagens) * voltas  # Total de energia recuperada em kWh
+
+    # Calculando o resultado final
+    resultado = energia_usada - energia_recuperada_kWh  # kWh
+    meta = 47  # kWh
     discrepancia = resultado - meta
+    
     if resultado > meta:
-        resposta = f"O consumo atual durante a corrida está em {resultado} Kwh, ou seja, ULTRAPASSANDO em {abs(discrepancia)}Kwh a capacidade de 47Kwh Máximos durante a corrida."
+        resposta = f"O consumo atual durante a corrida está em {resultado:.2f} kWh, ou seja, ULTRAPASSANDO em {abs(discrepancia):.2f} kWh a capacidade de 47 kWh máximos durante a corrida."
     else:
-        resposta = f"O consumo atual durante a corrida está em {resultado} Kwh, ou seja, ECONOMIZANDO em {abs(discrepancia)}Kwh a capacidade de 47Kwh Máximos durante a corrida."
+        resposta = f"O consumo atual durante a corrida está em {resultado:.2f} kWh, ou seja, ECONOMIZANDO em {abs(discrepancia):.2f} kWh a capacidade de 47 kWh máximos durante a corrida."
+
+    # Salvar os dados em um arquivo JSON
+    dados = {
+        "bateria": {
+            "usagem": f"{resultado:.2f} kWh",
+            "discrepancia": f"{abs(discrepancia):.2f} kWh",
+            "relacao": "economizando" if resultado <= meta else "ultrapassando"
+        }
+    }
+    salvar_json(dados, "bateria.json")
     return resposta
 
 
@@ -89,6 +120,13 @@ def eficiencia_bateria(temperatura: float) -> str:
     else:
         nova_eficiencia = eficiencia - (20 - temperatura)
         resposta = f"Devido a temperatura de {temperatura} graus celcius, a eficiencia diminuiu {eficiencia-nova_eficiencia}% resultando em {nova_eficiencia}% de eficácia"
+    
+    # Salvar os dados em um arquivo JSON
+    dados = {
+        "temperatura": temperatura,
+        "eficiencia": nova_eficiencia
+    }
+    salvar_json(dados, "eficiencia.json")
     return resposta
 
 
@@ -100,6 +138,14 @@ def distancia_corrida(pista: str,voltas: int) -> str:
     volta = pistas.get(pista)
     distancia = volta * voltas
     resposta = f"A distancia total da corrida (Race Lenght) é de {distancia}, percorrendo {voltas} voltas."
+
+    # Salvar os dados em um arquivo JSON
+    dados = {
+        "pista": pista,
+        "voltas": voltas,
+        "distancia_total": distancia
+    }
+    salvar_json(dados, "distancia.json")
     return resposta
     
 
